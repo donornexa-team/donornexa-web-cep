@@ -1,0 +1,21 @@
+# Local config / secrets
+config/db.local.php
+.env
+
+# Logs
+logs/*.log
+
+# Uploads (keep folder via .gitkeep)
+public/uploads/*
+!public/uploads/.gitkeep
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Dependencies
+vendor/
+node_modules/
