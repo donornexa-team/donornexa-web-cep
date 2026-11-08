@@ -14,4 +14,4 @@ Smart emergency blood-donor coordination portal (PHP + MySQL), Web Engineering C
 ## Team workflow
 - `main` is protected: PRs only, 1 review required.
 - Branches: `feature/<initial>-<thing>`.
-- Schema changes only via PR to `sql/schema.sql` + announce in group chat.
+- Schema changes only via PR to `sql/schema.sql`
