@@ -1,0 +1,9 @@
+# Project root. Needs mod_rewrite (on by default in XAMPP).
+Options -Indexes
+RewriteEngine On
+
+# Never serve source, config, SQL, templates or logs over the web.
+RewriteRule ^(config|src|templates|sql|logs|docs)(/|$) - [F,L]
+
+# http://localhost/DonorNexa/ opens the public folder.
+RewriteRule ^$ public/ [L]
