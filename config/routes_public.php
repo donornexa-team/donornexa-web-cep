@@ -4,8 +4,10 @@
  * $router is created in public/index.php.
  */
 
+use DonorNexa\Controllers\EmergencyController;
 use DonorNexa\Controllers\HomeController;
 
 /** @var \DonorNexa\Core\Router $router */
 
 $router->get('/', [HomeController::class, 'index']);
+$router->get('/emergencies', [EmergencyController::class, 'index']);
