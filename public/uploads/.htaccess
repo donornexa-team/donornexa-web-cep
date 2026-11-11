@@ -1,0 +1,7 @@
+# Licence documents are private: nobody can download a .pdf straight from the
+# browser. Only PHP code (the admin pages) may read them.
+# Photos (.jpg/.png) stay public because donor profiles will show them.
+Options -Indexes
+<FilesMatch "\.pdf$">
+    Require all denied
+</FilesMatch>

@@ -8,6 +8,7 @@ logs/*.log
 # Uploads (keep folder via .gitkeep)
 public/uploads/*
 !public/uploads/.gitkeep
+!public/uploads/.htaccess
 
 # OS / editors
 .DS_Store

@@ -1,0 +1,40 @@
+/* Accounts slice: login and registration pages. Mobile-first. */
+
+.auth-card {
+    max-width: 34rem;
+    margin: 0 auto;
+}
+
+.auth-card h1 { margin-top: 0; }
+
+.form-intro { color: var(--color-muted); }
+
+.required-mark { color: var(--color-error); font-weight: 700; }
+
+.form-hint {
+    margin: .25rem 0 0;
+    color: var(--color-muted);
+    font-size: .85rem;
+}
+
+/* Keeps the layout from jumping when an error message appears. */
+.field-error { min-height: 1.25rem; margin: .25rem 0 0; }
+
+input.input-invalid,
+select.input-invalid { border-color: var(--color-error); border-width: 2px; }
+
+.form-actions { margin: 1.25rem 0 0; }
+.form-actions .btn { width: 100%; }
+
+.auth-switch {
+    margin: 1.25rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+    color: var(--color-muted);
+}
+
+@media (min-width: 640px) {
+    .auth-card { padding: 1.5rem 2rem; }
+    .form-actions .btn { width: auto; min-width: 12rem; }
+}
