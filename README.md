@@ -11,10 +11,6 @@ Smart emergency blood-donor coordination portal (PHP + MySQL), Web Engineering C
 4. Import `sql/schema.sql` then `sql/seed0_reference.sql` in phpMyAdmin.
 5. Open http://localhost/DonorNexa/public/
 
-## Team workflow
-- `main` is protected: PRs only, 1 review required.
-- Schema changes only via PR to `sql/schema.sql`
-
 ## Database
 - The schema file is loacted at `sql/`, along with the reference seed data.
 - The ERD is provided in `donornexa_erd.png`.
