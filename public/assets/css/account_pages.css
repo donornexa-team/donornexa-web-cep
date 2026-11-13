@@ -1,0 +1,54 @@
+/* Accounts slice: donor profile page and the admin Hospitals / Users lists. Mobile-first. */
+
+.badge {
+    display: inline-block;
+    padding: .15rem .6rem;
+    border-radius: 999px;
+    font-size: .8rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.badge-ok      { background: #e3f4e8; color: #1b6b35; }
+.badge-warn    { background: #fff3d6; color: #7a5200; }
+.badge-bad     { background: #fde7e9; color: #9b1c2b; }
+.badge-neutral { background: #eef0f3; color: #3c4450; }
+
+/* ---------- donor profile ---------- */
+
+.profile-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.profile-card h2 { margin-top: 0; font-size: 1.15rem; }
+
+.avatar {
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    margin: 0 0 1rem;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #eef0f3;
+}
+.avatar-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-muted);
+    font-size: .85rem;
+    text-align: center;
+}
+
+.fact-list { margin: 0 0 1rem; }
+.fact-list div { display: flex; flex-wrap: wrap; gap: .25rem .75rem; padding: .35rem 0; border-bottom: 1px solid var(--color-border); }
+.fact-list dt { flex: 0 0 9rem; font-weight: 600; color: var(--color-muted); }
+.fact-list dd { margin: 0; }
+
+.reason-list { margin: .5rem 0 1rem; padding-left: 1.25rem; }
+
+/* ---------- admin lists ---------- */
+
+.inline-form { display: inline; margin: 0; }
+.row-actions { display: flex; flex-wrap: wrap; gap: .35rem; }
+
+@media (min-width: 768px) {
+    .profile-grid { grid-template-columns: repeat(2, 1fr); }
+    .profile-wide { grid-column: 1 / -1; }
+}
