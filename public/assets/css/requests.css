@@ -1,0 +1,89 @@
+/* Requests slice: hospital pages for blood requests (form, list, detail).
+   Colours come from the CSS variables in style.css. Mobile-first: one column,
+   wider screens add columns. List styles (filters, tables, pagination) are
+   shared with admin.css. */
+
+.page-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem 1rem;
+    margin-bottom: .5rem;
+}
+.page-head h1 { margin: 0; }
+
+/* ---- New request form ---- */
+.request-card {
+    max-width: 36rem;
+    margin: 0 auto;
+}
+.request-card h1 { margin-top: 0; }
+
+.form-intro { color: var(--color-muted); }
+.required-mark { color: var(--color-error); font-weight: 700; }
+
+.form-hint {
+    margin: .25rem 0 0;
+    color: var(--color-muted);
+    font-size: .85rem;
+}
+
+/* Keeps the layout from jumping when an error message appears. */
+.field-error { min-height: 1.25rem; margin: .25rem 0 0; }
+
+input.input-invalid,
+select.input-invalid { border-color: var(--color-error); border-width: 2px; }
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: 1.25rem 0 0;
+}
+.form-actions .btn { flex: 1 1 10rem; text-align: center; }
+
+.critical-meter {
+    margin: 0 0 1rem;
+    padding: .5rem .75rem;
+    background: #eef0f3;
+    border-radius: var(--radius);
+}
+.critical-full { color: var(--color-error); font-weight: 600; }
+
+/* ---- Urgency badges (same colours as the public board) ---- */
+.req-badge {
+    display: inline-block;
+    padding: .1rem .6rem;
+    border-radius: 999px;
+    color: #fff;
+    font-size: .8rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.req-critical { background: var(--color-error); }
+.req-urgent   { background: var(--color-warning); }
+.req-normal   { background: var(--color-info); }
+
+/* ---- Tables ---- */
+/* The scrolling table wrapper must also be the containing block of the visually
+   hidden text inside the table. Without this, that text sticks out of the wrapper
+   and makes the whole page scroll sideways on a phone. */
+.table-wrap { position: relative; }
+
+/* ---- Request detail ---- */
+.detail-list {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+}
+.detail-list dt { color: var(--color-muted); font-size: .85rem; font-weight: 600; }
+.detail-list dd { margin: 0; font-weight: 600; }
+
+/* ---- Wider screens ---- */
+@media (min-width: 640px) {
+    .request-card { padding: 1.5rem 2rem; }
+    .form-actions .btn { flex: 0 0 auto; min-width: 11rem; }
+    .detail-list { grid-template-columns: repeat(3, 1fr); }
+}

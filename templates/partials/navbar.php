@@ -26,6 +26,7 @@ $menus = [
     ],
     'hospital' => [
         ['/hospital/dashboard', 'Dashboard'],
+        ['/hospital/requests', 'My Requests'],
         ['/hospital/requests/new', 'New Request'],
         ['/hospital/inventory', 'Inventory'],
         ['/emergencies', 'Active Emergencies'],
