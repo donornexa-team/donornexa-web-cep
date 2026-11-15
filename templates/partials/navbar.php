@@ -23,6 +23,7 @@ $menus = [
         ['/donor/profile', 'My Profile'],
         ['/donor/history', 'Donation History'],
         ['/emergencies', 'Active Emergencies'],
+        ['/donor/requests', 'Requests for Me'],
     ],
     'hospital' => [
         ['/hospital/dashboard', 'Dashboard'],

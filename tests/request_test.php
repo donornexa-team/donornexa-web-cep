@@ -311,7 +311,7 @@ if ($pdo !== null && $hospitalId !== null) {
         })(array_column($saved, 'score')));
         check('only compatible blood groups were matched (O+ can receive O+ and O-)',
             array_diff(array_column($saved, 'blood_group'), ['O+', 'O-']) === []);
-        check('the hospital view contains no phone number', $saved === [] || !array_key_exists('phone', $saved[0]));
+        check('the hospital view shows no phone number before a donor accepts', $saved === [] || ($saved[0]['status'] === 'notified' && $saved[0]['phone'] === null));
 
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE id > ? AND message LIKE 'Normal: 1 unit(s) of O+ blood%'");
         $stmt->execute([$notifyFrom]);

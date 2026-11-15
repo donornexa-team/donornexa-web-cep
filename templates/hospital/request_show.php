@@ -3,10 +3,12 @@
  * One request with its ranked donors (hospital only).
  * Variables: $request, $matches.
  *
- * Privacy: a donor's phone number is NOT shown here. It stays hidden until the
- * donor accepts. (The accept/decline feature will add the phone for accepted
- * matches and write the reveal to audit_logs.)
+ * Privacy: a donor's phone number appears ONLY for a donor who accepted (the
+ * query returns NULL for everyone else), and the first reveal is written to
+ * audit_logs by RequestController::show().
  */
+
+use DonorNexa\Core\Csrf;
 
 $matchLabels = [
     'notified'    => 'Waiting for reply',
@@ -18,6 +20,7 @@ $matchLabels = [
 ?>
 <link rel="stylesheet" href="<?= e(asset('css/admin.css')) ?>">
 <link rel="stylesheet" href="<?= e(asset('css/requests.css')) ?>">
+<script src="<?= e(asset('js/request_actions.js')) ?>" defer></script>
 
 <section aria-labelledby="request-heading">
     <p><a href="<?= e(url('/hospital/requests')) ?>">&laquo; All my requests</a></p>
@@ -42,10 +45,27 @@ $matchLabels = [
         </dl>
     </div>
 
+    <?php if ($request['status'] === 'open'): ?>
+        <div class="card request-actions">
+            <h2>Manage this request</h2>
+            <p class="muted">Cancelling lowers your hospital's trust score. Close the request instead if you simply do not need the blood any more.</p>
+            <div class="inbox-actions">
+                <form method="post" action="<?= e(url('/hospital/requests/' . (int) $request['id'] . '/close')) ?>">
+                    <?= Csrf::field() ?>
+                    <button type="submit" class="btn btn-outline" data-confirm="Close this request? Donors will be told.">Close request</button>
+                </form>
+                <form method="post" action="<?= e(url('/hospital/requests/' . (int) $request['id'] . '/cancel')) ?>">
+                    <?= Csrf::field() ?>
+                    <button type="submit" class="btn btn-danger" data-confirm="Cancel this request? This lowers your hospital's trust score.">Cancel request</button>
+                </form>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <h2>Matched donors</h2>
     <p class="muted">
         Ranked by match score (out of 100): exact blood group, same city, time since the last donation and past response rate.
-        Phone numbers stay hidden until a donor accepts.
+        A donor's phone number appears only after the donor accepts.
     </p>
 
     <div class="table-wrap">
@@ -60,11 +80,12 @@ $matchLabels = [
                     <th scope="col">Score</th>
                     <th scope="col">Answer</th>
                     <th scope="col">Phone</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($matches)): ?>
-                    <tr><td colspan="7" class="empty-cell">No eligible donor matched this request.</td></tr>
+                    <tr><td colspan="8" class="empty-cell">No eligible donor matched this request.</td></tr>
                 <?php endif; ?>
 
                 <?php foreach ($matches as $rank => $match): ?>
@@ -74,8 +95,25 @@ $matchLabels = [
                         <td><?= e($match['blood_group']) ?></td>
                         <td><?= e($match['city_name']) ?></td>
                         <td><?= e(number_format((float) $match['score'], 1)) ?></td>
-                        <td><?= e($matchLabels[$match['status']] ?? $match['status']) ?></td>
-                        <td><span class="muted">Hidden until the donor accepts</span></td>
+                        <td><?= e($matchLabels[$match['status']] ?? $match['status']) ?>
+                            <?php if ($match['decline_reason'] !== null && $match['decline_reason'] !== ''): ?>
+                                <br><small class="muted"><?= e($match['decline_reason']) ?></small>
+                            <?php endif; ?></td>
+                        <td>
+                            <?php if ($match['phone'] !== null): ?>
+                                <a href="tel:<?= e($match['phone']) ?>"><?= e($match['phone']) ?></a>
+                            <?php else: ?>
+                                <span class="muted">Hidden until the donor accepts</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($match['status'] === 'accepted' && $request['status'] === 'open'): ?>
+                                <form method="post" action="<?= e(url('/hospital/requests/' . (int) $request['id'] . '/matches/' . (int) $match['id'] . '/donated')) ?>">
+                                    <?= Csrf::field() ?>
+                                    <button type="submit" class="btn btn-small" data-confirm="Confirm that this donor has donated blood?">Mark donated</button>
+                                </form>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
