@@ -99,5 +99,12 @@ check('aria-sort says ascending for the sorted column and none for others',
 check('search text in links is URL-encoded',
     strpos(make(['q' => 'a&b=c'])->url(), 'q=a%26b%3Dc') !== false);
 
+$qs = $list->queryString();
+check('queryString keeps search, sorting and filters but not the page',
+    strpos($qs, 'q=login') !== false && strpos($qs, 'sort=user') !== false
+    && strpos($qs, 'entity=users') === false /* filter was not set by the URL */ && strpos($qs, 'page') === false);
+check('queryString of an empty list is empty or only the default sort',
+    strpos(make([])->queryString(), 'q=') === false);
+
 echo PHP_EOL, ($failed === 0 ? 'ALL CHECKS PASSED' : "$failed CHECK(S) FAILED"), PHP_EOL;
 exit($failed === 0 ? 0 : 1);

@@ -34,6 +34,9 @@
         <div class="filter-actions">
             <button type="submit" class="btn btn-small">Apply</button>
             <a class="btn btn-small btn-outline" href="<?= e(url('/admin/audit')) ?>">Reset</a>
+            <?php $exportQuery = $list->queryString(); ?>
+            <a class="btn btn-small btn-outline"
+               href="<?= e(url('/admin/export/audit') . ($exportQuery !== '' ? '?' . $exportQuery : '')) ?>">Export CSV</a>
         </div>
     </form>
 
