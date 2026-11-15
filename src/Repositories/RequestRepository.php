@@ -127,24 +127,50 @@ class RequestRepository
 
     /**
      * Donors matched to a request, best score first. Name, blood group, city
-     * and the answer status only: NO phone number (it stays hidden until the
-     * donor accepts).
+     * and the answer status. The PHONE is selected only for donors who accepted
+     * (or already donated); for everyone else it is NULL, so it can never reach
+     * the page before the donor says yes (CEP privacy rule).
      */
     public function matchesFor(int $requestId): array
     {
         $stmt = Database::connection()->prepare(
-            'SELECT m.id, m.score, m.status, m.notified_at, m.responded_at,
-                    u.name AS donor_name, d.blood_group, c.city_name
+            "SELECT m.id, m.score, m.status, m.decline_reason, m.notified_at, m.responded_at,
+                    u.name AS donor_name, d.blood_group, c.city_name,
+                    CASE WHEN m.status IN ('accepted', 'donated') THEN d.phone ELSE NULL END AS phone
                FROM request_matches m
                JOIN donors d ON d.user_id = m.donor_id
                JOIN users u  ON u.id = d.user_id
                JOIN cities c ON c.id = d.city_id
               WHERE m.request_id = ?
-           ORDER BY m.score DESC, m.id ASC'
+           ORDER BY m.score DESC, m.id ASC"
         );
         $stmt->execute([$requestId]);
 
         return $stmt->fetchAll();
+    }
+
+    /**
+     * Write the "phone number revealed to the hospital" event to the audit log
+     * (CEP privacy rule). It is written the FIRST time a hospital sees an
+     * accepted donor's phone; opening the page again does not repeat it.
+     *
+     * @param array[] $matches the rows from matchesFor()
+     */
+    public function recordPhoneReveals(int $hospitalId, array $matches, string $ip): void
+    {
+        $pdo   = Database::connection();
+        $seen  = $pdo->prepare("SELECT 1 FROM audit_logs WHERE action = 'donor.phone_revealed' AND entity = 'request_matches' AND entity_id = ? LIMIT 1");
+        $audit = new AuditRepository();
+
+        foreach ($matches as $match) {
+            if ($match['phone'] === null) {
+                continue;
+            }
+            $seen->execute([(int) $match['id']]);
+            if ($seen->fetchColumn() === false) {
+                $audit->log($hospitalId, 'donor.phone_revealed', 'request_matches', (int) $match['id'], null, 'phone shown to hospital after acceptance', $ip);
+            }
+        }
     }
 
     // ------------------------------------------------------------- writing

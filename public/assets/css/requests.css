@@ -87,3 +87,25 @@ select.input-invalid { border-color: var(--color-error); border-width: 2px; }
     .form-actions .btn { flex: 0 0 auto; min-width: 11rem; }
     .detail-list { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* ---- Donor inbox, history and request actions ---- */
+.inbox-list { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 1rem; }
+.inbox-item h2 { margin: 0 0 .5rem; font-size: 1.15rem; }
+.inbox-actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin-top: .75rem; }
+.decline-form { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.decline-form input[type="text"] {
+    padding: .5rem .6rem;
+    font: inherit;
+    min-width: 12rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+.request-actions { margin-bottom: 1.5rem; }
+.request-actions h2 { margin-top: 0; font-size: 1.15rem; }
+.btn-danger { background: var(--color-error); border-color: var(--color-error); color: #fff; }
+
+.badge-list { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; grid-template-columns: 1fr; gap: .75rem; }
+.badge-item { display: flex; flex-direction: column; padding: .8rem 1rem; border-radius: var(--radius); border: 1px solid var(--color-border); background: var(--color-surface); }
+.badge-item.is-earned { border-color: #1e6b34; background: #e6f4ea; }
+.badge-item.is-locked { opacity: .65; }
+@media (min-width: 640px) { .badge-list { grid-template-columns: repeat(3, 1fr); } }

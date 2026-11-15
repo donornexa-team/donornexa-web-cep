@@ -8,8 +8,10 @@ use DonorNexa\Exceptions\ForbiddenException;
 use DonorNexa\Exceptions\NotFoundException;
 use DonorNexa\Exceptions\ValidationException;
 use DonorNexa\Repositories\RequestRepository;
+use DonorNexa\Services\ExpiryService;
 use DonorNexa\Services\ListQuery;
 use DonorNexa\Services\MatchingService;
+use DonorNexa\Services\RequestLifecycleService;
 use DonorNexa\Services\RequestService;
 
 /**
@@ -33,6 +35,8 @@ class RequestController extends BaseController
     {
         $user     = $this->requireRole('hospital');
         $requests = new RequestRepository();
+
+        (new ExpiryService())->sweep();   // mark expired requests before listing them
 
         $list = new ListQuery($_GET, '/hospital/requests', [
             'created'   => 'r.created_at',
@@ -99,6 +103,8 @@ class RequestController extends BaseController
             throw new NotFoundException('That blood request was not found.');
         }
 
+        (new ExpiryService())->sweep();
+
         $requests = new RequestRepository();
         $request  = $requests->findForHospital((int) $id, (int) $user['id']);
         if ($request === null) {
@@ -106,14 +112,83 @@ class RequestController extends BaseController
             throw new NotFoundException('That blood request was not found.');
         }
 
+        $matches = $requests->matchesFor((int) $request['id']);
+        // Accepted donors' phones are in $matches now: record that the hospital saw them.
+        $requests->recordPhoneReveals((int) $user['id'], $matches, $this->ip());
+
         $this->render('hospital/request_show', [
             'title'   => 'Request #' . $request['id'],
             'request' => $request,
-            'matches' => $requests->matchesFor((int) $request['id']),
+            'matches' => $matches,
         ]);
     }
 
+    /** POST /hospital/requests/{id}/matches/{match}/donated : the donor gave blood. */
+    public function markDonated(array $params = []): void
+    {
+        $user = $this->requireRole('hospital');
+        $id   = $this->number($params, 'id');
+        $match = $this->number($params, 'match');
+
+        try {
+            (new RequestLifecycleService())->markDonated((int) $user['id'], $id, $match, $this->ip());
+            Session::flash('success', 'Donation recorded. One unit was added to your inventory.');
+        } catch (ValidationException $e) {
+            Session::flash('error', (string) reset($e->getErrors()));
+        }
+
+        $this->redirect('/hospital/requests/' . $id);
+    }
+
+    /** POST /hospital/requests/{id}/cancel : cancelling lowers the hospital's trust score. */
+    public function cancel(array $params = []): void
+    {
+        $user = $this->requireRole('hospital');
+        $id   = $this->number($params, 'id');
+
+        try {
+            (new RequestLifecycleService())->cancel((int) $user['id'], $id, $this->ip());
+            Session::flash('warning', 'Request #' . $id . ' was cancelled. Your hospital\'s trust score was lowered.');
+        } catch (ValidationException $e) {
+            Session::flash('error', (string) reset($e->getErrors()));
+        }
+
+        $this->redirect('/hospital/requests/' . $id);
+    }
+
+    /** POST /hospital/requests/{id}/close : no penalty. */
+    public function close(array $params = []): void
+    {
+        $user = $this->requireRole('hospital');
+        $id   = $this->number($params, 'id');
+
+        try {
+            (new RequestLifecycleService())->close((int) $user['id'], $id, $this->ip());
+            Session::flash('success', 'Request #' . $id . ' was closed.');
+        } catch (ValidationException $e) {
+            Session::flash('error', (string) reset($e->getErrors()));
+        }
+
+        $this->redirect('/hospital/requests/' . $id);
+    }
+
     // ---------------------------------------------------------------- helpers
+
+    /** A numeric route parameter, or a 404 page. */
+    private function number(array $params, string $name): int
+    {
+        $value = (string) ($params[$name] ?? '');
+        if (!ctype_digit($value)) {
+            throw new NotFoundException('That blood request was not found.');
+        }
+
+        return (int) $value;
+    }
+
+    private function ip(): string
+    {
+        return (string) ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
+    }
 
     /** Show the form (again), with the old values and any error messages. */
     private function renderForm(int $hospitalId, array $old, array $errors, int $status = 200): void
