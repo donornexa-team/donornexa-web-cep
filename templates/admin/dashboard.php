@@ -47,7 +47,17 @@ $tiles = [
         </figure>
     </div>
 
-    <p><a class="btn btn-outline" href="<?= e(url('/admin/audit')) ?>">Open the audit log</a></p>
+    <section class="card report-links" aria-labelledby="reports-heading">
+        <h2 id="reports-heading">Reports and tools</h2>
+        <p class="muted">CSV files open in Excel. Every export is recorded in the audit log.</p>
+        <ul class="report-list">
+            <li><a class="btn btn-small btn-outline" href="<?= e(url('/admin/export/requests')) ?>">Export requests (CSV)</a></li>
+            <li><a class="btn btn-small btn-outline" href="<?= e(url('/admin/export/donors')) ?>">Export donors (CSV)</a></li>
+            <li><a class="btn btn-small btn-outline" href="<?= e(url('/admin/export/audit')) ?>">Export audit log (CSV)</a></li>
+            <li><a class="btn btn-small" href="<?= e(url('/admin/donors')) ?>">Search donors</a></li>
+            <li><a class="btn btn-small" href="<?= e(url('/admin/audit')) ?>">Open the audit log</a></li>
+        </ul>
+    </section>
 </section>
 
 <script src="<?= e(asset('js/admin.js')) ?>" defer></script>

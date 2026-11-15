@@ -195,6 +195,78 @@ class AdminRepository
         return $stmt->fetchAll();
     }
 
+    // ---------------------------------------------------------- CSV exports
+
+    /**
+     * Audit rows for the CSV export: the same search, entity filter and sorting
+     * as the audit page, but ALL matching rows (at most $limit) instead of one page.
+     *
+     * @return array[] flat rows, ready for CsvExporter
+     */
+    public function exportAuditLogs(ListQuery $list, string $entity, int $limit = 10000): array
+    {
+        [$where, $params] = $this->auditWhere($list, $entity);
+
+        $sql = sprintf(
+            "SELECT a.created_at, COALESCE(u.name, 'System / guest') AS user_name,
+                    COALESCE(u.role, '') AS user_role, a.action, a.entity, a.entity_id,
+                    a.old_value, a.new_value, a.ip_address
+               FROM audit_logs a
+               LEFT JOIN users u ON u.id = a.user_id
+              WHERE %s
+           ORDER BY %s, a.id DESC
+              LIMIT %d",
+            $where,
+            $list->orderBy(),
+            $limit
+        );
+
+        $stmt = Database::connection()->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
+
+    /** Every blood request with its hospital, city and number of matched donors. */
+    public function exportRequests(int $limit = 10000): array
+    {
+        $sql = sprintf(
+            "SELECT r.id, h.hospital_name, c.city_name, r.blood_group, r.units_needed,
+                    r.units_fulfilled, r.urgency, r.required_by, r.status, r.created_at,
+                    (SELECT COUNT(*) FROM request_matches m WHERE m.request_id = r.id) AS donors_matched
+               FROM blood_requests r
+               JOIN hospitals h ON h.user_id = r.hospital_id
+               JOIN cities c    ON c.id = h.city_id
+           ORDER BY r.id
+              LIMIT %d",
+            $limit
+        );
+
+        return Database::connection()->query($sql)->fetchAll();
+    }
+
+    /**
+     * Donor summary. Privacy: NO phone, CNIC or email, only what an overview needs.
+     */
+    public function exportDonors(int $limit = 10000): array
+    {
+        $sql = sprintf(
+            "SELECT d.user_id AS id, u.name, d.blood_group, c.city_name, u.status,
+                    IF(d.is_available = 1, 'yes', 'no') AS available,
+                    d.last_donation_date,
+                    IF(e.user_id IS NULL, 'no', 'yes') AS eligible_now
+               FROM donors d
+               JOIN users u  ON u.id = d.user_id
+               JOIN cities c ON c.id = d.city_id
+               LEFT JOIN v_eligible_donors e ON e.user_id = d.user_id
+           ORDER BY d.user_id
+              LIMIT %d",
+            $limit
+        );
+
+        return Database::connection()->query($sql)->fetchAll();
+    }
+
     /** @return array{0:string,1:array} the WHERE text (with ? marks) and its parameters */
     private function auditWhere(ListQuery $list, string $entity): array
     {

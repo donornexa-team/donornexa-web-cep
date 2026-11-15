@@ -228,6 +228,23 @@ class ListQuery
         return url($this->path) . ($query !== '' ? '?' . $query : '');
     }
 
+    /**
+     * The current search, sort and filters as a query string WITHOUT the page
+     * number and without a leading "?" (for links such as the CSV export,
+     * which must contain every matching row, not just one page).
+     */
+    public function queryString(): string
+    {
+        $params = array_merge(
+            ['q' => $this->search, 'sort' => $this->sortKey, 'dir' => $this->direction],
+            $this->filters
+        );
+
+        return http_build_query(array_filter($params, static function ($value): bool {
+            return $value !== '';
+        }));
+    }
+
     /** Link to another page number. */
     public function pageUrl(int $page): string
     {

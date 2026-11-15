@@ -33,6 +33,7 @@ $menus = [
     ],
     'admin' => [
         ['/admin/dashboard', 'Dashboard'],
+         ['/admin/donors', 'Donors'],
         ['/admin/hospitals', 'Hospitals'],
         ['/admin/users', 'Users'],
         ['/admin/audit', 'Audit Log'],
