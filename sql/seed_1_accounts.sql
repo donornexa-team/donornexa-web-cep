@@ -1,0 +1,101 @@
+-- DonorNexa seed 1/3 : accounts (P1)
+-- All test accounts use the password  Password@123
+USE donornexa;
+SET NAMES utf8mb4;
+
+INSERT INTO cities (id, city_name, province) VALUES
+(1, 'Karachi', 'Sindh'),
+(2, 'Hyderabad', 'Sindh'),
+(3, 'Sukkur', 'Sindh'),
+(4, 'Jamshoro', 'Sindh'),
+(5, 'Lahore', 'Punjab'),
+(6, 'Faisalabad', 'Punjab'),
+(7, 'Multan', 'Punjab'),
+(8, 'Islamabad', 'Islamabad Capital Territory'),
+(9, 'Peshawar', 'Khyber Pakhtunkhwa'),
+(10, 'Quetta', 'Balochistan');
+
+INSERT INTO settings (setting_key, setting_value, description) VALUES
+('cooldown_days', '90', 'Minimum days between two donations'),
+('top_n_notify', '5', 'Donors notified first for a normal request'),
+('critical_pool_multiplier', '2', 'Critical requests widen the pool by this factor'),
+('max_open_critical', '3', 'Max open critical requests per hospital'),
+('no_response_hours', '24', 'Hours before a notification is marked no_response'),
+('trust_penalty_cancel', '5', 'Trust points lost per cancelled request');
+
+INSERT INTO users (id, name, email, password_hash, role, status, created_at) VALUES
+(1, 'System Admin', 'admin@donornexa.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'admin', 'active', NOW() - INTERVAL 235 DAY),
+(2, 'City Care Hospital', 'hospital1@donornexa.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'hospital', 'active', NOW() - INTERVAL 209 DAY),
+(3, 'Indus Medical Centre', 'hospital2@donornexa.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'hospital', 'active', NOW() - INTERVAL 240 DAY),
+(4, 'Sindh Lifeline Hospital', 'hospital3@donornexa.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'hospital', 'active', NOW() - INTERVAL 234 DAY),
+(5, 'Capital General Hospital', 'hospital4@donornexa.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'hospital', 'active', NOW() - INTERVAL 205 DAY),
+(6, 'Punjab Relief Hospital', 'hospital5@donornexa.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'hospital', 'active', NOW() - INTERVAL 241 DAY),
+(7, 'Imran Rizvi', 'imran.rizvi@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 210 DAY),
+(8, 'Omar Qureshi', 'omar.qureshi@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 225 DAY),
+(9, 'Kamran Memon', 'kamran.memon@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 244 DAY),
+(10, 'Imran Soomro', 'imran.soomro@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 217 DAY),
+(11, 'Noor Qureshi', 'noor.qureshi@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 226 DAY),
+(12, 'Imran Memon', 'imran.memon@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 218 DAY),
+(13, 'Kamran Butt', 'kamran.butt@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'blocked', NOW() - INTERVAL 242 DAY),
+(14, 'Hassan Ansari', 'hassan.ansari@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 219 DAY),
+(15, 'Kamran Abbasi', 'kamran.abbasi@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 226 DAY),
+(16, 'Hira Chaudhry', 'hira.chaudhry@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 203 DAY),
+(17, 'Zain Khan', 'zain.khan@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 219 DAY),
+(18, 'Komal Chaudhry', 'komal.chaudhry@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 247 DAY),
+(19, 'Hassan Baloch', 'hassan.baloch@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 236 DAY),
+(20, 'Naveed Memon', 'naveed.memon@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 256 DAY),
+(21, 'Hira Rizvi', 'hira.rizvi@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 222 DAY),
+(22, 'Imran Ansari', 'imran.ansari@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 226 DAY),
+(23, 'Noor Shaikh', 'noor.shaikh@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 226 DAY),
+(24, 'Danish Soomro', 'danish.soomro@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 201 DAY),
+(25, 'Ahmed Soomro', 'ahmed.soomro@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 255 DAY),
+(26, 'Hamza Siddiqui', 'hamza.siddiqui@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 249 DAY),
+(27, 'Usman Khan', 'usman.khan@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 251 DAY),
+(28, 'Ali Butt', 'ali.butt@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 223 DAY),
+(29, 'Danish Siddiqui', 'danish.siddiqui@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 241 DAY),
+(30, 'Mahnoor Baloch', 'mahnoor.baloch@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 212 DAY),
+(31, 'Saad Khan', 'saad.khan@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 225 DAY),
+(32, 'Imran Baloch', 'imran.baloch@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 246 DAY),
+(33, 'Zainab Memon', 'zainab.memon@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 225 DAY),
+(34, 'Sana Chaudhry', 'sana.chaudhry@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 213 DAY),
+(35, 'Faisal Qureshi', 'faisal.qureshi@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 260 DAY),
+(36, 'Ali Malik', 'ali.malik@mail.test', '$2y$10$0xGIE71phB2ZnwC8TMDcUufLlVVuKgrQtB8iyvOeD7Mqin/.YIwo6', 'donor', 'active', NOW() - INTERVAL 200 DAY);
+
+INSERT INTO hospitals (user_id, hospital_name, licence_no, licence_file, city_id, address, phone, verification_status, trust_score) VALUES
+(2, 'City Care Hospital', 'SHC-HYD-2019-0142', 'licence_2.pdf', 2, 'Main Road, Hyderabad', '0300-1000001', 'verified', 100),
+(3, 'Indus Medical Centre', 'SHC-KHI-2017-0388', 'licence_3.pdf', 1, 'Main Road, Karachi', '0301-1000002', 'verified', 95),
+(4, 'Sindh Lifeline Hospital', 'SHC-JSR-2020-0057', 'licence_4.pdf', 4, 'Main Road, Jamshoro', '0302-1000003', 'verified', 95),
+(5, 'Capital General Hospital', 'PHC-ISB-2018-0219', 'licence_5.pdf', 8, 'Main Road, Islamabad', '0303-1000004', 'verified', 100),
+(6, 'Punjab Relief Hospital', 'PHC-LHR-2026-0911', 'licence_6.pdf', 5, 'Main Road, Lahore', '0304-1000005', 'pending', 100);
+
+INSERT INTO donors (user_id, blood_group, dob, weight_kg, cnic, city_id, phone, last_donation_date, is_available, photo) VALUES
+(7, 'O-', '1982-03-23', 83.9, '43712-7066345-5', 8, '0309-6037344', NULL, 1, NULL),
+(8, 'O+', '1978-09-14', 46.5, '43676-5830794-2', 2, '0322-9203439', NULL, 1, NULL),
+(9, 'B+', '1997-06-20', 48.0, '44571-6263809-6', 1, '0331-2570280', CURDATE() - INTERVAL 279 DAY, 1, NULL),
+(10, 'AB-', '1995-10-22', 85.4, '40532-2017864-5', 8, '0326-6821782', NULL, 1, NULL),
+(11, 'A+', '1962-05-09', 65.6, '41376-2964541-8', 2, '0316-7559047', NULL, 1, NULL),
+(12, 'AB+', '1992-05-05', 85.3, '41362-8536114-7', 2, '0344-7967519', NULL, 1, NULL),
+(13, 'A+', '1977-03-05', 63.6, '43116-4871367-3', 4, '0310-9136324', NULL, 1, NULL),
+(14, 'O+', '1988-09-12', 77.6, '42309-1068679-3', 2, '0322-9648511', NULL, 0, NULL),
+(15, 'B+', '1987-07-13', 69.6, '40442-8661210-9', 1, '0336-2044345', NULL, 0, NULL),
+(16, 'A+', '1994-01-04', 55.0, '41329-2844290-6', 1, '0318-2702289', NULL, 1, NULL),
+(17, 'AB+', '1979-11-09', 90.4, '40576-4488867-7', 7, '0345-8954941', CURDATE() - INTERVAL 204 DAY, 1, NULL),
+(18, 'O-', '1984-02-05', 58.8, '43817-9059692-8', 1, '0324-9029943', NULL, 1, NULL),
+(19, 'B-', '1986-03-23', 75.1, '40189-4442936-9', 3, '0308-6001115', CURDATE() - INTERVAL 267 DAY, 1, NULL),
+(20, 'B+', '2007-02-11', 83.6, '42139-9697256-6', 1, '0348-9433856', NULL, 1, NULL),
+(21, 'A-', '1998-04-07', 74.2, '41598-5016258-7', 5, '0320-1468706', NULL, 1, NULL),
+(22, 'A-', '2000-12-12', 90.3, '41586-6776075-8', 2, '0321-4698744', CURDATE() - INTERVAL 139 DAY, 1, NULL),
+(23, 'O-', '1994-10-27', 55.1, '42766-4428816-8', 3, '0321-3011649', NULL, 1, NULL),
+(24, 'O+', '1988-11-11', 58.2, '41632-9020058-3', 2, '0337-7734153', NULL, 1, NULL),
+(25, 'B+', '1975-03-19', 88.5, '41301-3852188-3', 5, '0319-8958388', CURDATE() - INTERVAL 380 DAY, 1, NULL),
+(26, 'B-', '1975-12-21', 58.8, '44494-3197544-1', 5, '0316-4268292', CURDATE() - INTERVAL 308 DAY, 1, NULL),
+(27, 'B+', '1991-04-25', 76.7, '42063-4569852-5', 1, '0328-8029864', NULL, 1, NULL),
+(28, 'A+', '1988-09-05', 74.7, '42898-8686665-9', 1, '0348-1313815', NULL, 1, NULL),
+(29, 'O+', '1980-03-16', 77.9, '44985-1065976-3', 2, '0308-2036081', NULL, 1, NULL),
+(30, 'B+', '2003-09-02', 64.2, '44550-9094788-2', 4, '0320-2639893', NULL, 1, NULL),
+(31, 'O+', '1994-09-20', 73.9, '40519-8436474-6', 8, '0327-9525445', NULL, 1, NULL),
+(32, 'O+', '2004-09-07', 86.1, '42028-9778001-5', 2, '0316-3040477', NULL, 1, NULL),
+(33, 'O-', '1981-11-10', 84.0, '41971-8186330-2', 2, '0315-3398789', NULL, 1, NULL),
+(34, 'A+', '2003-08-06', 91.6, '41798-2579162-7', 1, '0312-8239734', NULL, 1, NULL),
+(35, 'O+', '1985-02-24', 68.5, '43451-4284050-6', 9, '0328-8695218', NULL, 1, NULL),
+(36, 'A+', '1991-02-04', 91.4, '42715-9681099-5', 4, '0311-2410314', NULL, 1, NULL);
