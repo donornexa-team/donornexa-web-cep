@@ -6,6 +6,7 @@
 
 use DonorNexa\Controllers\AdminAccountsController;
 use DonorNexa\Controllers\AuthController;
+use DonorNexa\Controllers\DashboardController;
 use DonorNexa\Controllers\DonorController;
 use DonorNexa\Controllers\RegisterController;
 
@@ -19,6 +20,10 @@ $router->get('/register/donor', [RegisterController::class, 'showDonor']);
 $router->post('/register/donor', [RegisterController::class, 'storeDonor']);
 $router->get('/register/hospital', [RegisterController::class, 'showHospital']);
 $router->post('/register/hospital', [RegisterController::class, 'storeHospital']);
+
+// Role home pages (donor and hospital; the admin dashboard is in routes_public.php)
+$router->get('/donor/dashboard', [DashboardController::class, 'donor']);
+$router->get('/hospital/dashboard', [DashboardController::class, 'hospital']);
 
 // Donor: own profile, availability toggle, photo (donor role only, see DonorController)
 $router->get('/donor/profile', [DonorController::class, 'profile']);
