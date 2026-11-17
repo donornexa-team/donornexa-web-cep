@@ -84,8 +84,8 @@ class AuthController extends BaseController
             Session::flash('info', 'Your hospital is not verified yet. You can raise blood requests after an administrator approves your licence.');
         }
 
-        // The role dashboards belong to the other slices; until they exist every role lands on the home page.
-        $this->redirect('/');
+        // Each role lands on its own dashboard.
+        $this->redirect(['donor' => '/donor/dashboard', 'hospital' => '/hospital/dashboard', 'admin' => '/admin/dashboard'][$user['role']] ?? '/');
     }
 
     public function logout(array $params = []): void
