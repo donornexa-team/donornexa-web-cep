@@ -98,19 +98,7 @@ CREATE TABLE hospitals (
         REFERENCES cities (id) ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- "Remember me" cookie tokens. Only a hash of the token is stored.
-CREATE TABLE remember_tokens (
-    id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    user_id    INT UNSIGNED NOT NULL,
-    selector   CHAR(24)     NOT NULL,
-    token_hash CHAR(64)     NOT NULL,
-    expires_at DATETIME     NOT NULL,
-    PRIMARY KEY (id),
-    -- INDEX JUSTIFICATION: looked up by selector on every cookie login.
-    UNIQUE KEY uq_remember_selector (selector),
-    CONSTRAINT fk_remember_user FOREIGN KEY (user_id)
-        REFERENCES users (id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+
 
 -- -----------------------------------------
 -- P2: REQUESTS & MATCHING

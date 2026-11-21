@@ -5,6 +5,7 @@ namespace DonorNexa\Controllers;
 
 use DonorNexa\Core\Session;
 use DonorNexa\Repositories\UserRepository;
+use DonorNexa\Core\RememberMe;
 
 /**
  * Login and logout.
@@ -80,6 +81,11 @@ class AuthController extends BaseController
         Session::login((int) $user['id'], (string) $user['name'], (string) $user['role']);
         Session::flash('success', 'Welcome back, ' . $user['name'] . '.');
 
+       
+        if ($this->postString('remember') === '1') {
+        RememberMe::issue((int) $user['id'], (string) $user['password_hash']);
+}
+
         if ($user['role'] === 'hospital' && $user['verification_status'] !== 'verified') {
             Session::flash('info', 'Your hospital is not verified yet. You can raise blood requests after an administrator approves your licence.');
         }
@@ -90,6 +96,7 @@ class AuthController extends BaseController
 
     public function logout(array $params = []): void
     {
+        RememberMe::forget();   
         Session::logout();
         Session::flash('success', 'You have been logged out.');
         $this->redirect('/');
