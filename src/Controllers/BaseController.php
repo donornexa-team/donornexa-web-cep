@@ -6,6 +6,7 @@ namespace DonorNexa\Controllers;
 use DonorNexa\Core\Session;
 use DonorNexa\Core\View;
 use DonorNexa\Exceptions\ForbiddenException;
+use DonorNexa\Exceptions\AuthenticationException;
 
 /**
  * Parent of every controller (inheritance requirement).
@@ -37,14 +38,19 @@ abstract class BaseController
 
     /** Guard: only logged-in users. Guests are sent to the login page. */
     protected function requireLogin(): array
-    {
-        $user = Session::user();
-        if ($user === null) {
-            Session::flash('error', 'Please log in to continue.');
-            $this->redirect('/login');
+{
+    $user = Session::user();
+    if ($user === null) {
+        // fetch() calls (DonorNexa.fetchJson sends "Accept: application/json")
+        // get a real 401 instead of an HTML redirect they cannot follow.
+        if (str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json')) {
+            throw new AuthenticationException();
         }
-        return $user;
+        Session::flash('error', 'Please log in to continue.');
+        $this->redirect('/login');
     }
+    return $user;
+}
 
     /** Guard: only the given roles, e.g. $this->requireRole('admin'). Others get a 403 page. */
     protected function requireRole(string ...$roles): array
