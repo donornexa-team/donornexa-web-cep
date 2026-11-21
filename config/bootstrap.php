@@ -44,3 +44,4 @@ ini_set('log_errors', '1');
 ini_set('error_log', LOG_PATH . '/error.log');
 
 Session::start();
+DonorNexa\Core\RememberMe::restoreSession();   // "keep me logged in" cookie

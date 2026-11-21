@@ -5,6 +5,7 @@
  */
 
 use DonorNexa\Controllers\AdminAccountsController;
+use DonorNexa\Controllers\AdminSettingsController;
 use DonorNexa\Controllers\AuthController;
 use DonorNexa\Controllers\DashboardController;
 use DonorNexa\Controllers\DonorController;
@@ -39,3 +40,9 @@ $router->post('/admin/hospitals/{id}/reject', [AdminAccountsController::class, '
 $router->get('/admin/users', [AdminAccountsController::class, 'users']);
 $router->post('/admin/users/{id}/block', [AdminAccountsController::class, 'blockUser']);
 $router->post('/admin/users/{id}/unblock', [AdminAccountsController::class, 'unblockUser']);
+
+// Admin: system settings (cool-down days ...) and cities (admin role only)
+$router->get('/admin/settings', [AdminSettingsController::class, 'show']);
+$router->post('/admin/settings', [AdminSettingsController::class, 'saveSettings']);
+$router->post('/admin/cities', [AdminSettingsController::class, 'addCity']);
+$router->post('/admin/cities/{id}', [AdminSettingsController::class, 'updateCity']);

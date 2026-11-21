@@ -25,6 +25,11 @@ use DonorNexa\Core\Csrf;
         require TEMPLATE_PATH . '/partials/form_field.php';
         ?>
 
+        <p class="form-check">
+            <input type="checkbox" id="f-remember" name="remember" value="1">
+            <label for="f-remember">Keep me logged in on this device for 30 days</label>
+        </p>
+
         <p class="form-actions"><button type="submit" class="btn">Log in</button></p>
     </form>
 

@@ -38,6 +38,7 @@ $menus = [
         ['/admin/hospitals', 'Hospitals'],
         ['/admin/users', 'Users'],
         ['/admin/audit', 'Audit Log'],
+        ['/admin/settings', 'Settings'],
     ],
 ];
 

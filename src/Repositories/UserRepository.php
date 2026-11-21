@@ -29,6 +29,18 @@ class UserRepository
         return ($row === false) ? null : $row;
     }
 
+    /** The account with this id (for the "keep me logged in" cookie), or null. */
+    public function findById(int $id): ?array
+    {
+        $stmt = Database::connection()->prepare(
+            'SELECT id, name, email, password_hash, role, status FROM users WHERE id = ?'
+        );
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+
+        return ($row === false) ? null : $row;
+    }
+
     /**
      * Login attempts are written to audit_logs (no extra table needed):
      * action 'login.failed' / 'login.success', new_value = the email typed.
