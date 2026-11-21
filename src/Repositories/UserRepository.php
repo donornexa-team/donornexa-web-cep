@@ -5,6 +5,7 @@ namespace DonorNexa\Repositories;
 
 use DonorNexa\Core\Database;
 use DonorNexa\Exceptions\ValidationException;
+use DonorNexa\Models\User;
 use PDOException;
 
 /**
@@ -14,7 +15,7 @@ use PDOException;
 class UserRepository
 {
     /** The account with this email (plus the hospital status, if it is a hospital), or null. */
-    public function findByEmail(string $email): ?array
+    public function findByEmail(string $email): ?User
     {
         $stmt = Database::connection()->prepare(
             'SELECT u.id, u.name, u.email, u.password_hash, u.role, u.status,
@@ -26,8 +27,7 @@ class UserRepository
         $stmt->execute([$email]);
         $row = $stmt->fetch();
 
-        return ($row === false) ? null : $row;
-    }
+        return ($row === false) ? null : User::fromRow($row);    }
 
     /** The account with this id (for the "keep me logged in" cookie), or null. */
     public function findById(int $id): ?array

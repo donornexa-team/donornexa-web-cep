@@ -39,7 +39,7 @@ class AuthController extends BaseController
         $this->render('login', ['title' => 'Login', 'old' => [], 'errors' => []]);
     }
 
-    public function login(array $params = []): void
+       public function login(array $params = []): void
     {
         $email    = strtolower($this->postString('email'));
         $password = $this->postPassword('password');
@@ -65,33 +65,33 @@ class AuthController extends BaseController
             return;
         }
 
-        if (!password_verify($password, $user['password_hash'])) {
-            $users->recordLoginAttempt($email, $ip, false, (int) $user['id']);
+        if (!password_verify($password, $user->passwordHash)) {               
+            $users->recordLoginAttempt($email, $ip, false, $user->id);          
             $this->showLoginError(self::BAD_LOGIN, $email, 401);
             return;
         }
 
         // Only a correct password gets to learn that the account is blocked.
-        if ($user['status'] !== 'active') {
+        if (!$user->isActive()) {                                              
             $this->showLoginError('This account has been blocked. Please contact the administrator.', $email, 403);
             return;
         }
 
-        $users->recordLoginAttempt($email, $ip, true, (int) $user['id']);
-        Session::login((int) $user['id'], (string) $user['name'], (string) $user['role']);
-        Session::flash('success', 'Welcome back, ' . $user['name'] . '.');
+        $users->recordLoginAttempt($email, $ip, true, $user->id);              
+        Session::login($user->id, $user->name, $user->role);                   
+        Session::flash('success', 'Welcome back, ' . $user->name . '.');       
 
-       
+        // "Keep me logged in" was ticked: send the signed 30-day cookie.
         if ($this->postString('remember') === '1') {
-        RememberMe::issue((int) $user['id'], (string) $user['password_hash']);
-}
+            RememberMe::issue($user->id, $user->passwordHash);                 
+        }
 
-        if ($user['role'] === 'hospital' && $user['verification_status'] !== 'verified') {
+        if ($user->isUnverifiedHospital()) {                                   
             Session::flash('info', 'Your hospital is not verified yet. You can raise blood requests after an administrator approves your licence.');
         }
 
         // Each role lands on its own dashboard.
-        $this->redirect(['donor' => '/donor/dashboard', 'hospital' => '/hospital/dashboard', 'admin' => '/admin/dashboard'][$user['role']] ?? '/');
+        $this->redirect($user->dashboardPath());                                
     }
 
     public function logout(array $params = []): void

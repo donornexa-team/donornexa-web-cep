@@ -8,6 +8,7 @@ use DonorNexa\Exceptions\ForbiddenException;
 use DonorNexa\Exceptions\ValidationException;
 use DonorNexa\Services\ListQuery;
 use DonorNexa\Services\RequestValidator;
+use DonorNexa\Models\BloodRequest;
 use Throwable;
 
 /**
@@ -110,7 +111,7 @@ class RequestRepository
      * One request, but only if it belongs to this hospital (a hospital can
      * never open another hospital's request by changing the number in the URL).
      */
-    public function findForHospital(int $requestId, int $hospitalId): ?array
+    public function findForHospital(int $requestId, int $hospitalId): ?BloodRequest
     {
         $stmt = Database::connection()->prepare(
             "SELECT r.id, r.blood_group, r.units_needed, r.units_fulfilled, r.urgency,
@@ -122,7 +123,7 @@ class RequestRepository
         $stmt->execute([$requestId, $hospitalId]);
         $row = $stmt->fetch();
 
-        return ($row === false) ? null : $row;
+        return ($row === false) ? null : BloodRequest::fromRow($row);
     }
 
     /**

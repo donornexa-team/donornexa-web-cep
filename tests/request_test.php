@@ -298,7 +298,7 @@ if ($pdo !== null && $hospitalId !== null) {
         $created[] = $id = $result['request_id'];
 
         $row = $repo->findForHospital($id, $hospitalId);
-        check('the request is saved as open for this hospital', $row !== null && $row['status'] === 'open' && (int) $row['units_needed'] === 1);
+        check('the request is saved as open for this hospital', $row !== null && $row->isOpen() && $row->unitsNeeded === 1);
         check('another hospital cannot open this request', $repo->findForHospital($id, $hospitalId + 100000) === null);
 
         $saved = $repo->matchesFor($id);

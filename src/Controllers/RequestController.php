@@ -112,12 +112,12 @@ class RequestController extends BaseController
             throw new NotFoundException('That blood request was not found.');
         }
 
-        $matches = $requests->matchesFor((int) $request['id']);
+        $matches = $requests->matchesFor($request->id);
         // Accepted donors' phones are in $matches now: record that the hospital saw them.
         $requests->recordPhoneReveals((int) $user['id'], $matches, $this->ip());
 
         $this->render('hospital/request_show', [
-            'title'   => 'Request #' . $request['id'],
+            'title'   => 'Request #' . $request->id,
             'request' => $request,
             'matches' => $matches,
         ]);
