@@ -11,12 +11,13 @@ Emergency blood-donor coordination portal. Hospitals raise blood requests, the s
 - **Public:** landing page and live emergencies board.
 - **Matching:** blood-group compatibility, eligibility (age, weight, cool-down, availability), ranking by city, recency and history.
 - **Security:** prepared statements, CSRF token on every POST, password hashing, role checks on every action, login lockout (5 failures per email / 20 per IP, 15 min), upload checks, audit log of important actions.
+- **All users:** login with "keep me logged in" (signed 30-day cookie, cleared on logout).
 
 ## Setup (XAMPP)
 1. Use PHP 8.0+ and set the timezone to `Asia/Karachi`.
 2. Clone into `htdocs`: `git clone <repo-url> DonorNexa`
 3. Copy `config/db.example.php` to `config/db.local.php` and set your credentials. **The default port is 3307; add `"port" => 3306` if your MySQL uses 3306.**
-4. In phpMyAdmin create database `donornexa` and import, in order: `sql/schema.sql`, `sql/seed_0_reference.sql`, `sql/seed_1_accounts.sql`, `sql/seed_2_requests.sql`, `sql/seed_3_inventory.sql`.
+4. In phpMyAdmin create database `donornexa` and import, in order: `sql/schema.sql`, `sql/seed0_reference.sql`, `sql/seed_1_accounts.sql`, `sql/seed_2_requests.sql`, `sql/seed_3_inventory.sql`.
 5. Open http://localhost/DonorNexa/public/
 
 ## Test logins
@@ -28,6 +29,9 @@ All passwords: `Password@123`
 | Hospital (verified) | `hospital1@donornexa.test` ... `hospital4@donornexa.test` |
 | Hospital (pending) | `hospital5@donornexa.test` |
 | Donor | `danish.siddiqui@mail.test` (others: `SELECT email FROM users WHERE role='donor'`) |
+
+## Warning
+> These accounts are demo seed data for local testing only. Change or remove them before deploying anywhere public.
 
 ## Try the full flow
 1. Log in as `hospital1@donornexa.test`, open **New Request**, raise an O+ request.
@@ -52,7 +56,7 @@ php tests/csv_test.php           php tests/donor_search_test.php
 ```
 public/      front controller (index.php), assets, uploads
 config/      settings, bootstrap, route files (one per slice)
-src/         Core, Controllers, Services (rules), Repositories (SQL), Exceptions
+src/         Core, Controllers, Models, Services (rules), Repositories (SQL), Exceptions
 templates/   PHP views      api/  JSON endpoints      sql/  schema + seeds
 tests/       CLI test scripts     docs/  ERD and database notes
 ```
