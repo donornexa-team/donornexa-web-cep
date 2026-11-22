@@ -18,6 +18,7 @@ $pageTitle = (isset($title) && $title !== '') ? $title . ' | ' . config('app_nam
     <meta name="csrf-token" content="<?= e(Csrf::token()) ?>">
     <title><?= e($pageTitle) ?></title>
     <link rel="stylesheet" href="<?= e(asset('css/style.css')) ?>">
+    <link rel="icon" type="image/svg+xml" href="<?= e(asset('img/favicon.svg')) ?>">
 </head>
 <body>
     <a class="skip-link" href="#main">Skip to main content</a>
