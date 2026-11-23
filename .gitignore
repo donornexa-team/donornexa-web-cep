@@ -1,4 +1,5 @@
 # Local config / secrets
+dummydata/
 config/remember.key
 config/db.local.php
 .env
